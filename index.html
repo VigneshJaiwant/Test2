@@ -25,16 +25,16 @@
 
         #main-card {
             background: white;
-            padding: 2rem;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             transition: all 0.5s ease;
             z-index: 10;
-            width: 320px;
+            width: 340px;
         }
 
         .gif-container img {
-            width: 180px;
+            width: 200px;
             border-radius: 15px;
             margin-bottom: 1rem;
         }
@@ -51,45 +51,45 @@
             justify-content: center;
             align-items: center;
             gap: 15px;
-            min-height: 150px; /* Space for the growing button */
+            min-height: 150px;
         }
 
         button {
-            padding: 12px 25px;
-            font-size: 16px;
+            padding: 12px 28px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             border: none;
             border-radius: 50px;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         #yesButton {
-            background-color: #4CAF50;
+            background-color: #ff4d6d;
             color: white;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
             z-index: 100;
         }
 
         #noButton {
-            background-color: var(--primary-pink);
+            background-color: #adb5bd;
             color: white;
-            position: absolute; /* Needed for the "run away" effect */
+            position: absolute;
             transition: 0.1s;
         }
 
-        /* Success State Styling */
         .hidden { display: none !important; }
         
         #success-section h1 {
             font-size: 2.2rem;
             color: var(--dark-pink);
             animation: heartBeat 1.2s infinite;
+            margin-top: 15px;
         }
 
         @keyframes heartBeat {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.08); }
             100% { transform: scale(1); }
         }
 
@@ -97,7 +97,6 @@
             position: fixed;
             top: -1vh;
             animation: fall 3s linear forwards;
-            color: var(--primary-pink);
             z-index: 1;
             user-select: none;
         }
@@ -112,7 +111,7 @@
     <div id="main-card">
         <div id="question-section">
             <div class="gif-container">
-                <img src="https://media.tenor.com/kzS_m6U8u9AAAAAi/peach-goma.gif" alt="Cute bear asking">
+                <img src="https://media.tenor.com/T_i_X_76_YAAAAAi/peach-goma.gif" alt="Chibi Asking">
             </div>
             <h1>Will you be my Valentine? 💖</h1>
             <div class="buttons">
@@ -123,7 +122,7 @@
 
         <div id="success-section" class="hidden">
             <div class="gif-container">
-                <img src="https://media.tenor.com/gU_Pb_7S6yYAAAAi/tkthao219-peach.gif" alt="Happy bears hugging">
+                <img src="https://media.tenor.com/9p3vE4N0_K8AAAAi/love-sticker.gif" alt="Chibi Love">
             </div>
             <h1>Yayy! I love you! ❤️💐</h1>
         </div>
@@ -135,32 +134,30 @@
         const questionSection = document.getElementById('question-section');
         const successSection = document.getElementById('success-section');
         
-        let yesSize = 16;
+        let yesSize = 18;
         let noClicks = 0;
         const noPhrases = [
             "Are you sure?", 
             "Really??", 
             "Think again!", 
-            "Pwetty please?", 
-            "You're breaking my heart!", 
-            "I'm gonna cry...", 
-            "Click YES! :("
+            "I'll be sad...", 
+            "Very sad...", 
+            "Extremely sad...", 
+            "Okay fine, click YES!"
         ];
 
-        // "No" Button Run Away Logic
         function moveNoButton() {
-            // Increase Yes Button size
-            yesSize += 12;
+            // Increase Yes size
+            yesSize += 15;
             yesButton.style.fontSize = `${yesSize}px`;
             yesButton.style.padding = `${yesSize/2}px ${yesSize}px`;
 
-            // Change No Button text
+            // Change No text
             if(noClicks < noPhrases.length) {
                 noButton.innerText = noPhrases[noClicks];
                 noClicks++;
             }
 
-            // Move No Button to a random position
             const x = Math.random() * (window.innerWidth - noButton.offsetWidth);
             const y = Math.random() * (window.innerHeight - noButton.offsetHeight);
             
@@ -172,18 +169,16 @@
         noButton.addEventListener('mouseover', moveNoButton);
         noButton.addEventListener('click', moveNoButton);
 
-        // "Yes" Button Click Logic
         yesButton.addEventListener('click', () => {
             questionSection.classList.add('hidden');
             successSection.classList.remove('hidden');
-            noButton.classList.add('hidden'); // Hide the running button
+            noButton.classList.add('hidden');
             createHearts();
         });
 
-        // Background Heart Shower
         function createHearts() {
-            const heartIcons = ['❤️', '💖', '💗', '🌸', '✨'];
-            for (let i = 0; i < 70; i++) {
+            const heartIcons = ['❤️', '💖', '💝', '💘', '✨'];
+            for (let i = 0; i < 75; i++) {
                 setTimeout(() => {
                     const heart = document.createElement('div');
                     heart.classList.add('heart');
@@ -191,12 +186,9 @@
                     heart.style.left = Math.random() * 100 + 'vw';
                     heart.style.fontSize = Math.random() * 20 + 20 + 'px';
                     heart.style.animationDuration = Math.random() * 2 + 2 + 's';
-                    heart.style.opacity = Math.random();
                     document.body.appendChild(heart);
-                    
-                    // Cleanup
                     setTimeout(() => heart.remove(), 4000);
-                }, i * 80);
+                }, i * 70);
             }
         }
     </script>
