@@ -26,79 +26,84 @@
         #main-card {
             background: white;
             padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             transition: all 0.5s ease;
             z-index: 10;
+            width: 320px;
         }
 
         .gif-container img {
-            width: 150px;
+            width: 180px;
+            border-radius: 15px;
             margin-bottom: 1rem;
         }
 
         h1 {
             color: var(--dark-pink);
-            font-size: 2rem;
-            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
         }
 
         .buttons {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            min-height: 100px;
+            gap: 15px;
+            min-height: 150px; /* Space for the growing button */
         }
 
         button {
             padding: 12px 25px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             border: none;
             border-radius: 50px;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.2s ease;
         }
 
         #yesButton {
             background-color: #4CAF50;
             color: white;
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            z-index: 100;
         }
 
         #noButton {
             background-color: var(--primary-pink);
             color: white;
-            position: absolute;
-            white-space: nowrap;
+            position: absolute; /* Needed for the "run away" effect */
+            transition: 0.1s;
         }
 
         /* Success State Styling */
         .hidden { display: none !important; }
         
-        .success-content h1 {
-            font-size: 3rem;
+        #success-section h1 {
+            font-size: 2.2rem;
+            color: var(--dark-pink);
             animation: heartBeat 1.2s infinite;
         }
 
         @keyframes heartBeat {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
 
         .heart {
             position: fixed;
             top: -1vh;
-            transform: translateY(0);
             animation: fall 3s linear forwards;
             color: var(--primary-pink);
             z-index: 1;
+            user-select: none;
         }
 
         @keyframes fall {
-            to { transform: translateY(105vh); }
+            to { transform: translateY(105vh) rotate(360deg); }
         }
     </style>
 </head>
@@ -107,7 +112,7 @@
     <div id="main-card">
         <div id="question-section">
             <div class="gif-container">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmo3N3JueXlic3p5eHh3YndmZzZ4eXN4eXN4eXN4eXN4eXN4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute bear">
+                <img src="https://media.tenor.com/kzS_m6U8u9AAAAAi/peach-goma.gif" alt="Cute bear asking">
             </div>
             <h1>Will you be my Valentine? 💖</h1>
             <div class="buttons">
@@ -118,9 +123,9 @@
 
         <div id="success-section" class="hidden">
             <div class="gif-container">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbW84cXNndXp3ZzZ4eXN4eXN4eXN4eXN4eXN4eXN4eXN4ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/K77qP26gR9x5W/giphy.gif" alt="Happy bear">
+                <img src="https://media.tenor.com/gU_Pb_7S6yYAAAAi/tkthao219-peach.gif" alt="Happy bears hugging">
             </div>
-            <h1 class="success-message">Yayy! I love you! ❤️💐</h1>
+            <h1>Yayy! I love you! ❤️💐</h1>
         </div>
     </div>
 
@@ -130,55 +135,68 @@
         const questionSection = document.getElementById('question-section');
         const successSection = document.getElementById('success-section');
         
-        let yesSize = 18;
+        let yesSize = 16;
         let noClicks = 0;
-        const noPhrases = ["Are you sure?", "Really?", "Think again!", "Last chance!", "Pretty please?", "You're breaking my heart!", "Don't do this!"];
+        const noPhrases = [
+            "Are you sure?", 
+            "Really??", 
+            "Think again!", 
+            "Pwetty please?", 
+            "You're breaking my heart!", 
+            "I'm gonna cry...", 
+            "Click YES! :("
+        ];
 
-        // The "Run Away" logic
-        noButton.addEventListener('mouseover', moveNoButton);
-        noButton.addEventListener('click', moveNoButton); // For mobile users
-
+        // "No" Button Run Away Logic
         function moveNoButton() {
-            // Make the Yes button grow
-            yesSize += 10;
+            // Increase Yes Button size
+            yesSize += 12;
             yesButton.style.fontSize = `${yesSize}px`;
             yesButton.style.padding = `${yesSize/2}px ${yesSize}px`;
 
-            // Change No button text
+            // Change No Button text
             if(noClicks < noPhrases.length) {
                 noButton.innerText = noPhrases[noClicks];
                 noClicks++;
             }
 
-            // Move the No button
+            // Move No Button to a random position
             const x = Math.random() * (window.innerWidth - noButton.offsetWidth);
             const y = Math.random() * (window.innerHeight - noButton.offsetHeight);
             
+            noButton.style.position = 'fixed';
             noButton.style.left = `${x}px`;
             noButton.style.top = `${y}px`;
         }
 
-        // The "Yes" logic
+        noButton.addEventListener('mouseover', moveNoButton);
+        noButton.addEventListener('click', moveNoButton);
+
+        // "Yes" Button Click Logic
         yesButton.addEventListener('click', () => {
             questionSection.classList.add('hidden');
             successSection.classList.remove('hidden');
+            noButton.classList.add('hidden'); // Hide the running button
             createHearts();
         });
 
-        // Background Heart Animation
+        // Background Heart Shower
         function createHearts() {
-            for (let i = 0; i < 50; i++) {
+            const heartIcons = ['❤️', '💖', '💗', '🌸', '✨'];
+            for (let i = 0; i < 70; i++) {
                 setTimeout(() => {
                     const heart = document.createElement('div');
                     heart.classList.add('heart');
-                    heart.innerHTML = '❤️';
+                    heart.innerHTML = heartIcons[Math.floor(Math.random() * heartIcons.length)];
                     heart.style.left = Math.random() * 100 + 'vw';
                     heart.style.fontSize = Math.random() * 20 + 20 + 'px';
-                    heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+                    heart.style.animationDuration = Math.random() * 2 + 2 + 's';
+                    heart.style.opacity = Math.random();
                     document.body.appendChild(heart);
                     
-                    setTimeout(() => heart.remove(), 5000);
-                }, i * 100);
+                    // Cleanup
+                    setTimeout(() => heart.remove(), 4000);
+                }, i * 80);
             }
         }
     </script>
