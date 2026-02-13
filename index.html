@@ -5,13 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Be My Valentine?</title>
     <style>
+        :root {
+            --primary-pink: #ff4d6d;
+            --soft-pink: #fff0f3;
+            --dark-pink: #c9184a;
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #fce4ec; /* Light pink background */
-            font-family: 'Segoe UI', sans-serif;
+            background-color: #fce4ec;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0;
             overflow: hidden;
             text-align: center;
@@ -20,44 +26,37 @@
         .container {
             background: white;
             padding: 3rem;
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             z-index: 10;
             width: 350px;
-            min-height: 450px;
+            min-height: 400px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        .gif-container {
-            height: 200px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* Replaced Image with Animated Emoji */
+        .emoji-display {
+            font-size: 100px;
             margin-bottom: 20px;
-        }
-
-        .gif-container img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 15px;
+            display: block;
         }
 
         h1 {
             color: #e91e63;
             font-size: 1.8rem;
             margin-bottom: 2rem;
+            line-height: 1.2;
         }
 
         .btn-group {
             display: flex;
-            gap: 20px;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            gap: 20px;
             width: 100%;
             min-height: 100px;
         }
@@ -68,27 +67,27 @@
             font-weight: bold;
             cursor: pointer;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             transition: all 0.2s ease;
         }
 
         #yesButton {
-            background-color: #4CAF50; /* The Green you liked */
+            background-color: #4CAF50; /* Green */
             color: white;
+            z-index: 100;
         }
 
         #noButton {
-            background-color: #f44336; /* The Red you liked */
+            background-color: #f44336; /* Red */
             color: white;
-            /* Starts static so it's visible in the card */
-            position: relative; 
+            position: relative;
+            z-index: 99;
         }
 
         .hidden { display: none !important; }
 
         /* Success Animation */
-        .success-text {
-            color: #e91e63;
+        .success-animate {
             animation: heartBeat 1.2s infinite;
         }
 
@@ -103,6 +102,7 @@
             top: -10%;
             animation: fall 3s linear forwards;
             z-index: 1;
+            pointer-events: none;
         }
 
         @keyframes fall {
@@ -114,10 +114,8 @@
 
     <div class="container" id="mainCard">
         <div id="questionSection">
-            <div class="gif-container">
-                <img src="https://media1.tenor.com/m/X6f_S_7_YAAAAAAA/peach-goma.gif" alt="Asking Chibi">
-            </div>
-            <h1>Will you be my Valentine? 💖</h1>
+            <div class="emoji-display">🥺</div>
+            <h1>Hey Swathi,will you be my Valentine? 💖</h1>
             <div class="btn-group">
                 <button id="yesButton">Yes</button>
                 <button id="noButton">No</button>
@@ -125,10 +123,8 @@
         </div>
 
         <div id="successSection" class="hidden">
-            <div class="gif-container">
-                <img src="https://media1.tenor.com/m/9p3vE4N0_K8AAAAC/love-sticker.gif" alt="Love Chibi">
-            </div>
-            <h1 class="success-text">Yayy! I love you! ❤️💐</h1>
+            <div class="emoji-display success-animate">🥰</div>
+            <h1 class="success-animate">Yayy! I love you! ❤️💐</h1>
         </div>
     </div>
 
@@ -139,19 +135,33 @@
         const successSection = document.getElementById('successSection');
 
         let yesSize = 18;
-
-        // When "No" is hovered or clicked
-        noButton.addEventListener('mouseover', moveButton);
-        noButton.addEventListener('click', moveButton);
+        let noClicks = 0;
+        
+        // Funny "No" phrases
+        const noPhrases = [
+            "No",
+            "Are you sure?", 
+            "Really??", 
+            "Think again!", 
+            "Pwetty please?", 
+            "You're breaking my heart!", 
+            "I'm gonna cry...", 
+            "Look at the big Yes button!"
+        ];
 
         function moveButton() {
-            // 1. Make the Yes button bigger
-            yesSize += 10;
+            // 1. Make the Yes button grow
+            yesSize += 15;
             yesButton.style.fontSize = yesSize + 'px';
             yesButton.style.padding = (yesSize/2) + 'px ' + yesSize + 'px';
 
-            // 2. Teleport the No button
-            // Once moved, we switch to 'fixed' so it can fly anywhere on screen
+            // 2. Change No button text funny-style
+            if (noClicks < noPhrases.length - 1) {
+                noClicks++;
+                noButton.innerText = noPhrases[noClicks];
+            }
+
+            // 3. Teleport the No button
             noButton.style.position = 'fixed';
             
             const padding = 50;
@@ -165,7 +175,9 @@
             noButton.style.top = randomY + 'px';
         }
 
-        // When "Yes" is clicked
+        noButton.addEventListener('mouseover', moveButton);
+        noButton.addEventListener('click', moveButton);
+
         yesButton.addEventListener('click', () => {
             questionSection.classList.add('hidden');
             successSection.classList.remove('hidden');
@@ -174,8 +186,8 @@
         });
 
         function startHeartRain() {
-            const hearts = ['❤️', '💖', '🌸', '✨', '💕'];
-            for (let i = 0; i < 50; i++) {
+            const hearts = ['❤️', '💖', '🌸', '✨', '💕', '💘'];
+            for (let i = 0; i < 60; i++) {
                 setTimeout(() => {
                     const heart = document.createElement('div');
                     heart.className = 'heart';
